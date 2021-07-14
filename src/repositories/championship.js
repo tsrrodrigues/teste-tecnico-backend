@@ -1,4 +1,5 @@
 const Database = require('../../database/database')
+const logger = require('../utility/logger')
 const database = new Database()
 database.load()
 
@@ -41,87 +42,120 @@ class ChampionshipRepositorie {
     this.championships = database.championships
   }
 
-  async getWinners(minimumNumberOfWins = 1) {
-    const numberOfWinsOfEachTeam = {}
+  async getWinners(minimumNumberOfWins = 2) {
+    try {
+      const numberOfWinsOfEachTeam = {};
 
-    this.championships.forEach(row => {
-      numberOfWinsOfEachTeam[row.primeiro] ? numberOfWinsOfEachTeam[row.primeiro] += 1 : numberOfWinsOfEachTeam[row.primeiro] = 1
-    })
+      this.championships.forEach(row => {
+        numberOfWinsOfEachTeam[row.primeiro] ? numberOfWinsOfEachTeam[row.primeiro] += 1 : numberOfWinsOfEachTeam[row.primeiro] = 1;
+      })
 
-    let winners = [...new Set(this.championships.map(championship => championship.primeiro))]
-    winners = winners.filter(winner => numberOfWinsOfEachTeam[winner] >= minimumNumberOfWins)
+      let winners = [...new Set(this.championships.map(championship => championship.primeiro))];
+      winners = winners.filter(winner => numberOfWinsOfEachTeam[winner] >= minimumNumberOfWins);
 
-    return winners
+      logger.info('Search winners from database completed');
+
+      return { status: 200, body: { result: winners, success: true } };
+    } catch (error) {
+      logger.error('Error on execute method ChampionshipRepositorie.getWinners - ' + error, { message: error.message });
+      return { status: 500, body: { error: error.message } };
+    }
   }
 
   async getTeamWithMostGunners() {
-    const numberOfGunnersPerTeam = {}
-    for (let championship of this.championships) {
-      for (let gunnerTeam of Object.keys(getGunnersTeamsFromRow(championship.artilheiros))) {
-        numberOfGunnersPerTeam[gunnerTeam] ? numberOfGunnersPerTeam[gunnerTeam] += 1 : numberOfGunnersPerTeam[gunnerTeam] = 1
+    try {
+      const numberOfGunnersPerTeam = {};
+      for (let championship of this.championships) {
+        for (let gunnerTeam of Object.keys(getGunnersTeamsFromRow(championship.artilheiros))) {
+          numberOfGunnersPerTeam[gunnerTeam] ? numberOfGunnersPerTeam[gunnerTeam] += 1 : numberOfGunnersPerTeam[gunnerTeam] = 1;
+        }
       }
-    }
 
-    let teamWithMostGunners = null
-    for (let team of Object.keys(numberOfGunnersPerTeam)) {
-      if (numberOfGunnersPerTeam[team] > numberOfGunnersPerTeam[teamWithMostGunners] || !numberOfGunnersPerTeam[teamWithMostGunners]) {
-        teamWithMostGunners = team
+      let teamWithMostGunners = null;
+      for (let team of Object.keys(numberOfGunnersPerTeam)) {
+        if (numberOfGunnersPerTeam[team] > numberOfGunnersPerTeam[teamWithMostGunners] || !numberOfGunnersPerTeam[teamWithMostGunners]) {
+          teamWithMostGunners = team;
+        }
       }
-    }
 
-    return teamWithMostGunners
+      return { status: 200, body: { result: teamWithMostGunners, success: true } };
+    } catch (error) {
+      logger.error('Error on execute method ChampionshipRepositorie.getTeamWithMostGunners - ' + error, { message: error.message });
+      return { status: 500, body: { error: error.message } };
+    }
   }
 
   async getTopGunners(top = 1) {
-    const gunners = this.championships
-      .sort((championshipA, championshipB) => championshipB.gols - championshipA.gols)
-      .flatMap(championship => getGunnersNamesFromRow(championship.artilheiros))
-      .slice(0, top)
+    try {
+      const gunners = this.championships
+        .sort((championshipA, championshipB) => championshipB.gols - championshipA.gols)
+        .flatMap(championship => getGunnersNamesFromRow(championship.artilheiros))
+        .slice(0, top);
 
-    return gunners
+      return { status: 200, body: { result: gunners, success: true } };
+    } catch (error) {
+      logger.error('Error on execute method ChampionshipRepositorie.getTopGunners - ' + error, { message: error.message });
+      return { status: 500, body: { error: error.message } };
+    }
   }
 
   async getMostViceTeam() {
-    const numberOfVicesOfEachTeam = {}
+    try {
+      const numberOfVicesOfEachTeam = {};
 
-    this.championships.forEach(row => {
-      numberOfVicesOfEachTeam[row.segundo] ? numberOfVicesOfEachTeam[row.segundo] += 1 : numberOfVicesOfEachTeam[row.segundo] = 1
-    })
+      this.championships.forEach(row => {
+        numberOfVicesOfEachTeam[row.segundo] ? numberOfVicesOfEachTeam[row.segundo] += 1 : numberOfVicesOfEachTeam[row.segundo] = 1;
+      })
 
-    let vices = [...new Set(this.championships.map(championship => championship.segundo))]
+      let vices = [...new Set(this.championships.map(championship => championship.segundo))];
 
-    let teamWithMostVices = null
-    for (let team of vices) {
-      if (numberOfVicesOfEachTeam[team] > numberOfVicesOfEachTeam[teamWithMostVices] || !numberOfVicesOfEachTeam[teamWithMostVices]) {
-        teamWithMostVices = team
+      let teamWithMostVices = null;
+      for (let team of vices) {
+        if (numberOfVicesOfEachTeam[team] > numberOfVicesOfEachTeam[teamWithMostVices] || !numberOfVicesOfEachTeam[teamWithMostVices]) {
+          teamWithMostVices = team;
+        }
       }
-    }
 
-    return teamWithMostVices
+      return { status: 200, body: { result: teamWithMostVices, success: true } };
+    } catch (error) {
+      logger.error('Error on execute method ChampionshipRepositorie.getMostViceTeam - ' + error, { message: error.message });
+      return { status: 500, body: { error: error.message } };
+    }
   }
 
   async getBestWinnestlessTeams(top = 1) {
-    let winnestlessTeamsBestParticipationsCount = {}
-    for (let championship of this.championships) {
-      for (let winnestlessTeam of getWinnestlessTeams(championship)) {
-        winnestlessTeamsBestParticipationsCount[winnestlessTeam] ?
-          winnestlessTeamsBestParticipationsCount[winnestlessTeam] += 1 :
-          winnestlessTeamsBestParticipationsCount[winnestlessTeam] = 1
+    try {
+      let winnestlessTeamsBestParticipationsCount = {};
+      for (let championship of this.championships) {
+        for (let winnestlessTeam of getWinnestlessTeams(championship)) {
+          winnestlessTeamsBestParticipationsCount[winnestlessTeam] ?
+            winnestlessTeamsBestParticipationsCount[winnestlessTeam] += 1 :
+            winnestlessTeamsBestParticipationsCount[winnestlessTeam] = 1;
+        }
       }
+
+      const bestWinnestlessTeams = Object.keys(winnestlessTeamsBestParticipationsCount)
+        .sort((teamA, teamB) => winnestlessTeamsBestParticipationsCount[teamB] - winnestlessTeamsBestParticipationsCount[teamA])
+        .slice(0, top);
+
+      return { status: 200, body: { result: bestWinnestlessTeams, success: true } };
+    } catch (error) {
+      logger.error('Error on execute method ChampionshipRepositorie.getBestWinnestlessTeams - ' + error, { message: error.message });
+      return { status: 500, body: { error: error.message } };
     }
-
-    const bestWinnestlessTeams = Object.keys(winnestlessTeamsBestParticipationsCount)
-      .sort((teamA, teamB) => winnestlessTeamsBestParticipationsCount[teamB] - winnestlessTeamsBestParticipationsCount[teamA])
-
-    return bestWinnestlessTeams.slice(0, top)
   }
 
   async getGunners(numberOfGoals) {
-    const gunners = this.championships
-      .filter(championship => championship.gols === numberOfGoals)
-      .flatMap(championship => getGunnersNamesFromRow(championship.artilheiros))
+    try {
+      const gunners = this.championships
+        .filter(championship => championship.gols === numberOfGoals)
+        .flatMap(championship => getGunnersNamesFromRow(championship.artilheiros));
 
-    return gunners
+      return { status: 200, body: { result: gunners, success: true } };
+    } catch (error) {
+      logger.error('Error on execute method ChampionshipRepositorie.getGunners - ' + error, { message: error.message });
+      return { status: 500, body: { error: error.message } };
+    }
   }
 }
 

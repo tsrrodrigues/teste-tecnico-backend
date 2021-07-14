@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require('cors')
+const cors = require('cors');
 const bodyParser = require("body-parser");
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 require('dotenv').config();
@@ -13,7 +13,7 @@ app.use(cors());
 
 const rateLimiter = new RateLimiterMemory({
   points: 1,
-  duration: 1,
+  duration: 1
 });
 const rateLimiterMiddleware = (request, response, next) => {
   rateLimiter.consume(request.path)
@@ -21,7 +21,7 @@ const rateLimiterMiddleware = (request, response, next) => {
       next();
     })
     .catch(_ => {
-      response.status(429).send('Too Many Requests');
+      response.status(429).json({ error: 'Muitas requisicoes consecutivas' });
     });
 };
 app.use(rateLimiterMiddleware);

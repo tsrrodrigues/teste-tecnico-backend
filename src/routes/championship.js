@@ -1,66 +1,81 @@
 const express = require("express");
 const router = express.Router();
+const logger = require('../utility/logger')
+const { calculateRequestTime } = require('../utility/otherUtils')
 
 const ChampionshipRepositorie = require('../repositories/championship')
 
 router.get("/winners-teams", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const winners = await championshipRepositorie.getWinners(request.query.minimumNumberOfWins);
-    response.status(200).json({ success: true, result: winners, transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getWinners(request.query.minimumNumberOfWins);
+
+    response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
-    response.status(500).json({ error: error.message });
+    response.status(500).json({ error: error.message, transaction: request.transaction });
+  } finally {
+    logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
 
 router.get("/most-gunners-team", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const teamWithMostGunners = await championshipRepositorie.getTeamWithMostGunners();
-    response.status(200).json({ success: true, result: teamWithMostGunners, transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getTeamWithMostGunners();
+    response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
     console.error(error)
-    response.status(500).json({ error: error.message });
+    response.status(500).json({ error: error.message, transaction: request.transaction });
+  } finally {
+    logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
 
 router.get("/top-gunners", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const gunners = await championshipRepositorie.getTopGunners(request.query.top);
-    response.status(200).json({ success: true, result: gunners, transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getTopGunners(request.query.top);
+    response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
-    response.status(500).json({ error: error.message });
+    response.status(500).json({ error: error.message, transaction: request.transaction });
+  } finally {
+    logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
 
 router.get("/gunners", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const gunners = await championshipRepositorie.getGunners(request.query.numberOfGoals);
-    response.status(200).json({ success: true, result: gunners, transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getGunners(request.query.numberOfGoals);
+    response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
-    response.status(500).json({ error: error.message });
+    response.status(500).json({ error: error.message, transaction: request.transaction });
+  } finally {
+    logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
 
 router.get("/best-winnestless-teams", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const teams = await championshipRepositorie.getBestWinnestlessTeams(request.query.top);
-    response.status(200).json({ success: true, result: teams, transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getBestWinnestlessTeams(request.query.top);
+    response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
-    response.status(500).json({ error: error.message });
+    response.status(500).json({ error: error.message, transaction: request.transaction });
+  } finally {
+    logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
 
 router.get("/most-vice-team", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const vices = await championshipRepositorie.getMostViceTeam();
-    response.status(200).json({ success: true, result: vices, transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getMostViceTeam();
+    response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
-    response.status(500).json({ error: error.message });
+    response.status(500).json({ error: error.message, transaction: request.transaction });
+  } finally {
+    logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
 
