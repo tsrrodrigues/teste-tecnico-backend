@@ -27,7 +27,13 @@ const getGunnersNamesFromRow = (gunnersRow) => {
     gunners[index] = gunners[index].split(' (')
     gunnerNames.add(gunners[index][0])
   }
-  return gunnerNames
+
+  return [...gunnerNames]
+}
+
+const getWinnestlessTeams = (championship) => {
+  const teams = [championship.segundo, championship.terceiro, championship.quarto]
+  return teams
 }
 
 class ChampionshipRepositorie {
@@ -35,7 +41,7 @@ class ChampionshipRepositorie {
     this.championships = database.championships
   }
 
-  async getWinners(numberOfWins = 1) {
+  async getWinners(minimumNumberOfWins = 1) {
     const numberOfWinsOfEachTeam = {}
 
     this.championships.forEach(row => {
@@ -43,7 +49,7 @@ class ChampionshipRepositorie {
     })
 
     let winners = [...new Set(this.championships.map(championship => championship.primeiro))]
-    winners = winners.filter(winner => numberOfWinsOfEachTeam[winner] >= numberOfWins)
+    winners = winners.filter(winner => numberOfWinsOfEachTeam[winner] >= minimumNumberOfWins)
 
     return winners
   }
@@ -66,6 +72,15 @@ class ChampionshipRepositorie {
     return teamWithMostGunners
   }
 
+  async getTopGunners(top = 1) {
+    const gunners = this.championships
+      .sort((championshipA, championshipB) => championshipB.gols - championshipA.gols)
+      .flatMap(championship => getGunnersNamesFromRow(championship.artilheiros))
+      .slice(0, top)
+
+    return gunners
+  }
+
   async getMostViceTeam() {
     const numberOfVicesOfEachTeam = {}
 
@@ -85,15 +100,28 @@ class ChampionshipRepositorie {
     return teamWithMostVices
   }
 
-  async getGunners(numberOfGoals) {
-    let gunners = new Set()
+  async getBestWinnestlessTeams(top = 1) {
+    let winnestlessTeamsBestParticipationsCount = {}
     for (let championship of this.championships) {
-      if (championship.gols === numberOfGoals) {
-        gunners = new Set([...gunners, ...getGunnersNamesFromRow(championship.artilheiros)])
+      for (let winnestlessTeam of getWinnestlessTeams(championship)) {
+        winnestlessTeamsBestParticipationsCount[winnestlessTeam] ?
+          winnestlessTeamsBestParticipationsCount[winnestlessTeam] += 1 :
+          winnestlessTeamsBestParticipationsCount[winnestlessTeam] = 1
       }
     }
 
-    return [...gunners]
+    const bestWinnestlessTeams = Object.keys(winnestlessTeamsBestParticipationsCount)
+      .sort((teamA, teamB) => winnestlessTeamsBestParticipationsCount[teamB] - winnestlessTeamsBestParticipationsCount[teamA])
+
+    return bestWinnestlessTeams.slice(0, top)
+  }
+
+  async getGunners(numberOfGoals) {
+    const gunners = this.championships
+      .filter(championship => championship.gols === numberOfGoals)
+      .flatMap(championship => getGunnersNamesFromRow(championship.artilheiros))
+
+    return gunners
   }
 }
 
