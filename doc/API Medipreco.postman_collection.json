@@ -1,0 +1,154 @@
+{
+	"info": {
+		"_postman_id": "7d4302b9-693c-42c0-a3b7-6c07ce2e6ee7",
+		"name": "API Medipreco",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/health",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Winners",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/championship/winners-teams",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"championship",
+						"winners-teams"
+					],
+					"query": [
+						{
+							"key": "minimumNumberOfWins",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Team with most Gunners",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/championship/most-gunners-team",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"championship",
+						"most-gunners-team"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Top Gunners",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/championship/top-gunners",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"championship",
+						"top-gunners"
+					],
+					"query": [
+						{
+							"key": "top",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/championship/most-vice-team",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"championship",
+						"most-vice-team"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Best Winnestless Teams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/championship/best-winless-teams",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"championship",
+						"best-winless-teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Gunners",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/championship/gunners?numberOfGoals=10",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"championship",
+						"gunners"
+					],
+					"query": [
+						{
+							"key": "numberOfGoals",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
