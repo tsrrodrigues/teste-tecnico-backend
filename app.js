@@ -13,7 +13,7 @@ app.use(cors());
 
 const rateLimiter = new RateLimiterMemory({
   points: 1,
-  duration: 1
+  duration: process.env.API_MEDIPRECO_MULTIPLE_REQUESTS_DELAY
 });
 const rateLimiterMiddleware = (request, response, next) => {
   rateLimiter.consume(request.path)
@@ -21,7 +21,7 @@ const rateLimiterMiddleware = (request, response, next) => {
       next();
     })
     .catch(_ => {
-      response.status(429).json({ error: 'Muitas requisicoes consecutivas' });
+      response.status(429).json({ error: 'Too many requests, wait 1 second before doing another request to the same endpoint' });
     });
 };
 app.use(rateLimiterMiddleware);
