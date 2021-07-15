@@ -19,6 +19,9 @@ A documentação dos endpoints foi feita utilizando o swagger e ela pode ser ace
 ```
 /v1/api-docs
 ```
+
+Na pasta doc é possível encontrar a collection do serviço Postman com as requisições de cada endpoint. Junto dela temos o json do environment local utilizado no desenvolvimento. Importando esses dois documentos no postman é possível testar todos os endpoints.
+ 
 Abaixo temos algumas especificações de alguns endpoints:
 
 **Os times com mais de dois títulos brasileiros**
