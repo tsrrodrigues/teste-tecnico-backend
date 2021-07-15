@@ -43,10 +43,10 @@ router.get("/top-gunners", async (request, response, next) => {
   }
 });
 
-router.get("/gunners", async (request, response, next) => {
+router.get("/most-vice-team", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const { status, body } = await championshipRepositorie.getGunners(request.query.numberOfGoals);
+    const { status, body } = await championshipRepositorie.getMostViceTeam();
     response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
     response.status(500).json({ error: error.message, transaction: request.transaction });
@@ -67,10 +67,11 @@ router.get("/best-winnestless-teams", async (request, response, next) => {
   }
 });
 
-router.get("/most-vice-team", async (request, response, next) => {
+router.get("/gunners", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const { status, body } = await championshipRepositorie.getMostViceTeam();
+    if (!request.query.numberOfGoals) return response.status(400).json({ error: 'Parameter numberOfGoals is missing', transaction: request.transaction });
+    const { status, body } = await championshipRepositorie.getGunners(request.query.numberOfGoals);
     response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
     response.status(500).json({ error: error.message, transaction: request.transaction });
@@ -78,5 +79,4 @@ router.get("/most-vice-team", async (request, response, next) => {
     logger.info('Request finished in ' + calculateRequestTime(request.initialTime) + 'ms\n', { transaction: request.transaction });
   }
 });
-
 module.exports = router;

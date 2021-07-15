@@ -25,16 +25,10 @@ const getGunnersNamesFromRow = (gunnersRow) => {
   const gunnerNames = new Set()
   for (let index = 0; index < gunners.length; index++) {
     gunners[index] = gunners[index].trim()
-    gunners[index] = gunners[index].split(' (')
-    gunnerNames.add(gunners[index][0])
+    gunnerNames.add(gunners[index] + ')')
   }
 
   return [...gunnerNames]
-}
-
-const getWinnestlessTeams = (championship) => {
-  const teams = [championship.segundo, championship.terceiro, championship.quarto]
-  return teams
 }
 
 class ChampionshipRepositorie {
@@ -85,7 +79,7 @@ class ChampionshipRepositorie {
     }
   }
 
-  async getTopGunners(top = 1) {
+  async getTopGunners(top = 5) {
     try {
       const gunners = this.championships
         .sort((championshipA, championshipB) => championshipB.gols - championshipA.gols)
@@ -123,23 +117,22 @@ class ChampionshipRepositorie {
     }
   }
 
-  async getBestWinnestlessTeams(top = 1) {
+  async getBestWinnestlessTeams() {
     try {
-      let winnestlessTeamsBestParticipationsCount = {};
-      for (let championship of this.championships) {
-        for (let winnestlessTeam of getWinnestlessTeams(championship)) {
-          winnestlessTeamsBestParticipationsCount[winnestlessTeam] ?
-            winnestlessTeamsBestParticipationsCount[winnestlessTeam] += 1 :
-            winnestlessTeamsBestParticipationsCount[winnestlessTeam] = 1;
+      let winnestlessTeams = new Set()
+      let winners = this.championships.map(championship => championship.primeiro);
+      this.championships.forEach(championship => {
+        const championshipWinnestlessTeams = [championship.segundo, championship.terceiro, championship.quarto];
+        const addTeamsList = []
+        for (let championshipWinnestlessTeam of championshipWinnestlessTeams) {
+          if (winners.findIndex(winner => winner === championshipWinnestlessTeam) === -1) addTeamsList.push(championshipWinnestlessTeam)
         }
-      }
+        winnestlessTeams = new Set([...winnestlessTeams, ...addTeamsList])
+      })
 
-      const bestWinnestlessTeams = Object.keys(winnestlessTeamsBestParticipationsCount)
-        .sort((teamA, teamB) => winnestlessTeamsBestParticipationsCount[teamB] - winnestlessTeamsBestParticipationsCount[teamA])
-        .slice(0, top);
-
-      return { status: 200, body: { result: bestWinnestlessTeams, success: true } };
+      return { status: 200, body: { result: [...winnestlessTeams], success: true } };
     } catch (error) {
+      console.log(error)
       logger.error('Error on execute method ChampionshipRepositorie.getBestWinnestlessTeams - ' + error, { message: error.message });
       return { status: 500, body: { error: error.message } };
     }
