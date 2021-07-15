@@ -1,4 +1,4 @@
-const logger = require('./utility/logger')
+const logger = require('../utility/logger')
 
 const initialRequestTime = (request, response, next) => {
   try {
