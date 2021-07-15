@@ -117,23 +117,23 @@ class ChampionshipRepositorie {
     }
   }
 
-  async getBestWinnestlessTeams() {
+  async getBestWinlessTeams() {
     try {
-      let winnestlessTeams = new Set()
+      let winlessTeams = new Set()
       let winners = this.championships.map(championship => championship.primeiro);
       this.championships.forEach(championship => {
-        const championshipWinnestlessTeams = [championship.segundo, championship.terceiro, championship.quarto];
+        const championshipWinlessTeams = [championship.segundo, championship.terceiro, championship.quarto];
         const addTeamsList = []
-        for (let championshipWinnestlessTeam of championshipWinnestlessTeams) {
-          if (winners.findIndex(winner => winner === championshipWinnestlessTeam) === -1) addTeamsList.push(championshipWinnestlessTeam)
+        for (let championshipWinlessTeam of championshipWinlessTeams) {
+          if (winners.findIndex(winner => winner === championshipWinlessTeam) === -1) addTeamsList.push(championshipWinlessTeam)
         }
-        winnestlessTeams = new Set([...winnestlessTeams, ...addTeamsList])
+        winlessTeams = new Set([...winlessTeams, ...addTeamsList])
       })
 
-      return { status: 200, body: { result: [...winnestlessTeams], success: true } };
+      return { status: 200, body: { result: [...winlessTeams], success: true } };
     } catch (error) {
       console.log(error)
-      logger.error('Error on execute method ChampionshipRepositorie.getBestWinnestlessTeams - ' + error, { message: error.message });
+      logger.error('Error on execute method ChampionshipRepositorie.getBestWinlessTeams - ' + error, { message: error.message });
       return { status: 500, body: { error: error.message } };
     }
   }

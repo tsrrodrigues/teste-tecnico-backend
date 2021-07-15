@@ -3,6 +3,8 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 require('dotenv').config();
+const swaggerUi = require('swagger-ui-express');
+const documentation = require('./doc');
 
 const routes = require('./src/routes');
 
@@ -25,6 +27,8 @@ const rateLimiterMiddleware = (request, response, next) => {
     });
 };
 app.use(rateLimiterMiddleware);
+
+app.use('/' + process.env.API_MEDIPRECO_VERSION + '/api-docs', swaggerUi.serve, swaggerUi.setup(documentation));
 
 app.use(routes);
 

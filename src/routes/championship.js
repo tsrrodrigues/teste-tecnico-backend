@@ -55,10 +55,10 @@ router.get("/most-vice-team", async (request, response, next) => {
   }
 });
 
-router.get("/best-winnestless-teams", async (request, response, next) => {
+router.get("/best-winless-teams", async (request, response, next) => {
   try {
     const championshipRepositorie = new ChampionshipRepositorie();
-    const { status, body } = await championshipRepositorie.getBestWinnestlessTeams(request.query.top);
+    const { status, body } = await championshipRepositorie.getBestWinlessTeams();
     response.status(status).json({ ...body, transaction: request.transaction });
   } catch (error) {
     response.status(500).json({ error: error.message, transaction: request.transaction });
