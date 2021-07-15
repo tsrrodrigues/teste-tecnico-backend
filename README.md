@@ -34,6 +34,26 @@ Para este endpoint foi definido um parâmetro de _top_, que tem um valor padrão
 Para este endpoint foi definido um parâmetro de _quantidade de gols (numberOfGoals)_, que é obrigatório, e deve ser enviado via query param para obter os artilheiros com aquela determinada quantidade de gols. Por exemplo, caso queria buscar os artilheiros que fizeram 5 gols em algum determinado campeonato, basta passar o parâmetro            ?numberOfGols=5.
 
 ## Desenvolvimento
+### Banco de dados
+Primeiramente, a API foi desenvolvida utilizando o arquivo .csv passado como banco de dados. A aplicação lê o arquivo e carrega o banco de dados conforme esse arquivo. Já a modelagem desenvolvida foi um pouco diferente da estrutura do arquivo. Com isso em mente vale observar que a API não segue a modelagem desenvolvida, mas sim a do arquivo csv.
+
+**Modelagem**
+
+Neste tópico explicarei melhor a modelagem do banco de dados. Primeiramente foi escolhida uma sintaxe específica, onde o nome da tabela/coluna é sempre precedido de uma sigla identificadora daquele campo. Por exemplo, a tabela campeonato teve seu nome no banco como tb_campeonato; já a coluna de artilheiros teve seu nome como no_artilheiros, identificando que naquela coluna temos os nomes dos artilheiros do campeonato. Essa sintaxe foi escolhida para um melhor entendimento das colunas durante o desenvolvimento, facilidando na hora de desenvolver queries SQL.
+
+**Tabelas**
+
+Foi designado apenas uma tabela *tb_campeonato* para o banco, considerando o escopo da aplicação e sua simplicidade, mas poderíamos ter outras tabelas como de times e/ou jogadores dependendo do escopo do projeto, e assim também teríamos chaves estrangeiras na tabela campeonatos em vez de dados brutos.
+
+**Colunas**
+
+Foram designadas 5 colunas, irei explicar brevemente cada uma delas:
+* co_campeonato: Chave primária identificadora do campeonato.
+* nu_ano: Ano em que o campeonato ocorreu. Aqui foi escolhido uma coluna do tipo inteiro para guardar o ano, pois como não precisamos guardar um dia e uma hora temos uma coluna guardando apenas o essencial, o que não ocorreria se tivéssemos uma coluna do tipo date.
+* no_times_melhores_colocados varchar(25)[4]: Array de nomes dos times melhores colocados. Foi decidido utilizar um array para facilitar a manutenção futura do sistema, caso quiséssemos começar a utilizar os 5 primeiros colocados, por exemplo. Nesse caso, um array de nomes facilitaria o desenvolvimento, ao contrário se fosse uma coluna para cada time melhor colocado.
+* no_artilheiros: Nomes dos artilheiros dos campeonatos. Seguindo a mesma lógica da coluna acima, foi decidido utilizar um array para guardar o nome de cada artilheiro do campeonato.
+* nu_gols: Número de gols feitos pelos artilheiros do campeonato. 
+
 ### Estrutura de pastas
 ```
 ├── app.js
@@ -94,6 +114,4 @@ Na pasta src temos as divisões de pastas:
   * API_MEDIPRECO_PORT: que define em qual porta será rodada a aplicação
   * API_MEDIPRECO_VERSION: que define a versão da api
   * API_MEDIPRECO_MULTIPLE_REQUESTS_DELAY: que define o tempo entre uma requisição e outra da mesma rota
-
-
 
