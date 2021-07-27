@@ -1,5 +1,5 @@
-# medipreco-backend-jr
-Esse repositório contém o teste técnico para a vaga de desenvolvedor backend júnior na Medipreço.
+# teste-tecnico-backend
+Esse repositório contém um teste técnico para a vaga de desenvolvedor backend.
 
 ## Rodando localmente
 ### Pré requisitos
@@ -114,7 +114,7 @@ Na pasta src temos as divisões de pastas:
   * **otherUtils**: que contém funções pequenas de utilidades variadas
 
 * .env: aqui temos as variáveis ambiente da aplicação, ele foi enviado ao github para facilitar o processo de rodar a api localmente. Nele temos as seguintes variáveis:
-  * API_MEDIPRECO_PORT: que define em qual porta será rodada a aplicação
-  * API_MEDIPRECO_VERSION: que define a versão da api
-  * API_MEDIPRECO_MULTIPLE_REQUESTS_DELAY: que define o tempo entre uma requisição e outra da mesma rota
+  * API_PORT: que define em qual porta será rodada a aplicação
+  * API_VERSION: que define a versão da api
+  * API_MULTIPLE_REQUESTS_DELAY: que define o tempo entre uma requisição e outra da mesma rota
 
