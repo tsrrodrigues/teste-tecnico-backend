@@ -12,7 +12,7 @@ Tenha o node.js instalado
 npm install
 npm start
 ```
-O arquivo .env foi enviado ao github para facilitar o processo de rodar localmente. Caso a porta 3000 já esteja sendo utilizada por outro serviço no seu computador, mude a variável API_MEDIPRECO_PORT para uma porta livre.
+O arquivo .env foi enviado ao github para facilitar o processo de rodar localmente. Caso a porta 3000 já esteja sendo utilizada por outro serviço no seu computador, mude a variável API_PORT para uma porta livre.
 
 ## Endpoints
 A documentação dos endpoints foi feita utilizando o swagger e ela pode ser acessada no endpoint.
